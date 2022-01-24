@@ -96,7 +96,7 @@ void doprocessing (int sock)
 		buffer[n]=0;
 		if(strcmp(buffer, "ENDE")== 0)
 		{
-			printf("ENDE");
+			printf("ENDE: iskljucio se");
 			exit(1);
 		}
 

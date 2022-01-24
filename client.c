@@ -40,14 +40,15 @@ void ispis(int sockfd)
 
 	printf("Unesi alterego agenta za kojeg zelis vise informacija: \n");
 	scanf("%s", a);
-	cezar(key, a);
-	
-	write(sockfd, a, strlen(a));
 	if(strcmp(a, "ENDE")==0)
 	{
+		write(sockfd, a, strlen(a));
 		printf("ENDE\n");
 		exit(1);
 	}
+	cezar(key, a);
+
+	write(sockfd, a, strlen(a));
 
 	int n = read(sockfd, spojnica, 300);
 	spojnica[n]=0;
