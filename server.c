@@ -8,6 +8,30 @@
 #include <unistd.h>
 #define LEN 10
 
+int key;
+//sifrovanje i desifrovanje koriscenjem cezarove enkripcije
+void cezar(int key, char *buffer)
+{
+	int duzina = strlen(buffer);
+	for(int i=0; i<duzina; i++)
+	{
+		buffer[i] = buffer[i]+key;
+		if(buffer[i]>'Z')
+			buffer[i] = buffer[i]-'Z'+'A'-1;
+	}
+}
+void desifrovanje(int key, char *buffer)
+{
+	int duzina = strlen(buffer);
+	for(int i=0; i<duzina; i++)
+	{
+		buffer[i] = buffer[i]-key;
+		if(buffer[i]<'A')
+			buffer[i] = buffer[i]+'Z'-'A'+1;
+	}
+}
+
+
 struct Agent
 {
 
@@ -82,13 +106,15 @@ void doprocessing (int sock)
 			exit(1);
 		}
 		printf("%s\n", buffer);
-
+		desifrovanje(key, buffer);
+		printf("%s\n", buffer);
 		int i = nadji(buffer);
 
 		if(i != -1)
 			sprintf(spojnica,"%s%s%s",baza[i].ime, baza[i].prezime, baza[i].lokacija);
 		else
 			sprintf(spojnica,"error\n");
+		cezar(key, spojnica);
 
 		write(sock, spojnica, strlen(spojnica));
 	}
@@ -104,6 +130,12 @@ int main( int argc, char *argv[] )
 	struct sockaddr_in serv_addr, cli_addr;
 	int  n;
 
+	if(argc != 2)
+	{
+		printf("\n Usage: %s <key>\n", argv[0]);
+		return 1;
+	}
+	key = atoi(argv[1]);
 	/* najpre se poziva uvek socket() funkcija da se registruje socket:
 	AF_INET je neophodan kada se zahteva komunikacija bilo koja
 	dva host-a na Internetu;

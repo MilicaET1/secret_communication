@@ -9,14 +9,16 @@
 #include <errno.h>
 #include <arpa/inet.h>
 
-void cezar (int key, char *buffer)
+int key;
+//sifrovanje i desifrovanje koriscenjem cezarove enkripcije
+void cezar(int key, char *buffer)
 {
 	int duzina = strlen(buffer);
 	for(int i=0; i<duzina; i++)
 	{
-		buffer[i]= buffer[i]+key;
+		buffer[i] = buffer[i]+key;
 		if(buffer[i]>'Z')
-			buffer[i]= buffer[i]-'Z'+'A'-1;
+			buffer[i] = buffer[i]-'Z'+'A'-1;
 	}
 }
 void desifrovanje(int key, char *buffer)
@@ -24,9 +26,9 @@ void desifrovanje(int key, char *buffer)
 	int duzina = strlen(buffer);
 	for(int i=0; i<duzina; i++)
 	{
-		buffer[i]= buffer[i]-key;
+		buffer[i] = buffer[i]-key;
 		if(buffer[i]<'A')
-			buffer[i]=buffer[i]+'Z'-'A'+1;
+			buffer[i] = buffer[i]+'Z'-'A'+1;
 	}
 }
 
@@ -38,7 +40,8 @@ void ispis(int sockfd)
 
 	printf("Unesi alterego agenta za kojeg zelis vise informacija: \n");
 	scanf("%s", a);
-
+	cezar(key, a);
+	
 	write(sockfd, a, strlen(a));
 	if(strcmp(a, "ENDE")==0)
 	{
@@ -48,9 +51,9 @@ void ispis(int sockfd)
 
 	int n = read(sockfd, spojnica, 300);
 	spojnica[n]=0;
-	cezar(3, spojnica);
+
 	printf("Sifrovano: %s\n", spojnica);
-	desifrovanje(3, spojnica);
+	desifrovanje(key, spojnica);
 	printf("Desifrovano: %s\n", spojnica);
 }
 
@@ -88,12 +91,12 @@ int main(int argc, char *argv[])
     size_t len = 0;
     int nread;
     /* klijentska aplikacija se poziva sa ./ime_aplikacija ip_adresa_servera */	
-    if(argc != 2)
+    if(argc != 3)
     {
-        printf("\n Usage: %s <ip of server> \n",argv[0]);
+        printf("\n Usage: %s <ip of server> <key>\n",argv[0]);
         return 1;
     }
-
+	key = atoi(argv[2]);
 
     /* kreiraj socket za komunikaciju sa serverom */
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
