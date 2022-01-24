@@ -54,6 +54,7 @@ struct Agent baza[LEN] = {
 {"ARON", "VAJDA", "SPIDERMAN", "LA"}
 };
 
+//funkcija trazi na kom mestu u bazi se nalazi taj alterego
 int nadji(char *alterego)
 {
 	for (int i = 0; i < LEN; i++)
@@ -78,6 +79,7 @@ void doprocessing (int sock)
 	m=read(sock, buffer2, 255);
 	buffer2[m]=0;
 	printf("%s\n", buffer2);
+	//provera da li dobijen needinfo
 	if(strcmp(buffer2, "NEEDINFO") != 0)
 	{
 		printf("ERROR!!!\n");
@@ -180,8 +182,7 @@ int main( int argc, char *argv[] )
 	while (1)
 	{
 		/*ovde ce cekati sve dok ne stigne zahtev za konekcijom od prvog klijenta*/
-		newsockfd = accept(sockfd,
-				(struct sockaddr *) &cli_addr, &clilen);
+		newsockfd = accept(sockfd,(struct sockaddr *) &cli_addr, &clilen);
 		printf("Client connected...\n");
 
 		if (newsockfd < 0)

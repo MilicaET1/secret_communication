@@ -81,17 +81,16 @@ void uparivanje(int sockfd)
 }
 
 
-/* definisanje globalnih promenljivih */
+
 
 int main(int argc, char *argv[])
 {
     int sockfd = 0;
     struct sockaddr_in serv_addr;
-    int done;
     char * line = NULL;
     size_t len = 0;
     int nread;
-    /* klijentska aplikacija se poziva sa ./ime_aplikacija ip_adresa_servera */	
+    /* klijentska aplikacija se poziva sa ./ime_aplikacija ip_adresa_servera key */	
     if(argc != 3)
     {
         printf("\n Usage: %s <ip of server> <key>\n",argv[0]);
@@ -129,9 +128,8 @@ int main(int argc, char *argv[])
     printf("Connected to server... Send message to server, or type 'quit' to exit\n");
 
     /* udji u petlju u kojoj ces slati poruke server sve dok ne posaljes “quit” */
-    done = 0;
 	uparivanje(sockfd);
-    
+
     close(sockfd);
     return 0;
 }
